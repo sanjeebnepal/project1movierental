@@ -87,6 +87,101 @@ module.exports =
 /************************************************************************/
 /******/ ({
 
+/***/ "./config/constants.js":
+/*!*****************************!*\
+  !*** ./config/constants.js ***!
+  \*****************************/
+/*! exports provided: errPost, errGet, errDelete, errUpdate, doneSave, Deleted, Updated */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errPost", function() { return errPost; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errGet", function() { return errGet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errDelete", function() { return errDelete; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "errUpdate", function() { return errUpdate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "doneSave", function() { return doneSave; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Deleted", function() { return Deleted; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Updated", function() { return Updated; });
+var errPost = {
+  message: "Failed to post"
+};
+var errGet = {
+  message: "Failed to get"
+};
+var errDelete = {
+  message: "Failed to delete"
+};
+var errUpdate = {
+  message: "Failed to update"
+};
+var doneSave = {
+  message: "Data saved successfully"
+};
+var Deleted = {
+  message: "Deleted successfully"
+};
+var Updated = {
+  message: "Updated Successfully"
+};
+
+/***/ }),
+
+/***/ "./controllers/movies.js":
+/*!*******************************!*\
+  !*** ./controllers/movies.js ***!
+  \*******************************/
+/*! exports provided: getAllMovies, getMovieById, postNewMovie, deleteMovieById, UpdateMovieById */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getAllMovies", function() { return getAllMovies; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getMovieById", function() { return getMovieById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "postNewMovie", function() { return postNewMovie; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteMovieById", function() { return deleteMovieById; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UpdateMovieById", function() { return UpdateMovieById; });
+/* harmony import */ var _models_movies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../models/movies */ "./models/movies.js");
+/* harmony import */ var _config_constants__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../config/constants */ "./config/constants.js");
+
+
+var getAllMovies = function getAllMovies(req, res) {
+  _models_movies__WEBPACK_IMPORTED_MODULE_0__["default"].find({}, function (err, movies) {
+    if (err) res.status(500).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["errGet"]);
+    res.status(200).json({
+      movies: movies
+    });
+  });
+};
+var getMovieById = function getMovieById(req, res) {
+  _models_movies__WEBPACK_IMPORTED_MODULE_0__["default"].findById(req.params.id, function (err, movie) {
+    if (err) res.status(500).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["errGet"]);
+    res.status(200).json({
+      movie: movie
+    });
+  });
+};
+var postNewMovie = function postNewMovie(req, res) {
+  new _models_movies__WEBPACK_IMPORTED_MODULE_0__["default"](req.body).save(function (err, data) {
+    if (err) res.status(500).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["errPost"]);
+    res.status(201).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["doneSave"]);
+  });
+};
+var deleteMovieById = function deleteMovieById(req, res) {
+  _models_movies__WEBPACK_IMPORTED_MODULE_0__["default"].findByIdAndDelete(req.params.id, function (err, data) {
+    if (err) res.status(500).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["errDelete"]);
+    res.status(200).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["Deleted"]);
+  });
+};
+var UpdateMovieById = function UpdateMovieById(req, res) {
+  Books.findByIdAndDelete(req.params.id, function (err, data) {
+    if (err) res.status(500).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["errUpdate"]);
+    res.status(200).json(_config_constants__WEBPACK_IMPORTED_MODULE_1__["Updated"]);
+  });
+};
+
+/***/ }),
+
 /***/ "./index.js":
 /*!******************!*\
   !*** ./index.js ***!
@@ -102,6 +197,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! dotenv */ "./node_modules/dotenv/lib/main.js");
 /* harmony import */ var dotenv__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(dotenv__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./routes */ "./routes/index.js");
+
 
 
 
@@ -116,12 +213,35 @@ mongoose__WEBPACK_IMPORTED_MODULE_1___default.a.connect(process.env.MONGOOSEURI,
   console.log(err);
 });
 app.use(express__WEBPACK_IMPORTED_MODULE_0___default.a.json());
-app.get("/", function (req, res) {
-  return res.send("hello world");
-});
+Object(_routes__WEBPACK_IMPORTED_MODULE_3__["default"])(app);
 app.listen(process.env.PORT, function () {
   return console.log("Listening to port ".concat(process.env.PORT));
 });
+
+/***/ }),
+
+/***/ "./models/movies.js":
+/*!**************************!*\
+  !*** ./models/movies.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! mongoose */ "./node_modules/mongoose/index.js");
+/* harmony import */ var mongoose__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(mongoose__WEBPACK_IMPORTED_MODULE_0__);
+
+var ObjectId = mongoose__WEBPACK_IMPORTED_MODULE_0__["Schema"].Types.ObjectId;
+var movies = new mongoose__WEBPACK_IMPORTED_MODULE_0__["Schema"]({
+  title: {
+    type: String,
+    required: true
+  },
+  category: ObjectId,
+  runTime: Number
+});
+/* harmony default export */ __webpack_exports__["default"] = (mongoose__WEBPACK_IMPORTED_MODULE_0___default.a.model("Movie", movies));
 
 /***/ }),
 
@@ -120557,6 +120677,44 @@ module.exports = function (module) {
 
   return module;
 };
+
+/***/ }),
+
+/***/ "./routes/index.js":
+/*!*************************!*\
+  !*** ./routes/index.js ***!
+  \*************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _movies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./movies */ "./routes/movies.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function (app) {
+  Object(_movies__WEBPACK_IMPORTED_MODULE_0__["default"])(app);
+});
+
+/***/ }),
+
+/***/ "./routes/movies.js":
+/*!**************************!*\
+  !*** ./routes/movies.js ***!
+  \**************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _controllers_movies__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../controllers/movies */ "./controllers/movies.js");
+
+/* harmony default export */ __webpack_exports__["default"] = (function (app) {
+  app.get("/movies", _controllers_movies__WEBPACK_IMPORTED_MODULE_0__["getAllMovies"]);
+  app.get("/movies/:id", _controllers_movies__WEBPACK_IMPORTED_MODULE_0__["getMovieById"]);
+  app.post("/movies", _controllers_movies__WEBPACK_IMPORTED_MODULE_0__["postNewMovie"]);
+  app["delete"]("/movies/:id", _controllers_movies__WEBPACK_IMPORTED_MODULE_0__["deleteMovieById"]);
+  app.put("/movies/:id", _controllers_movies__WEBPACK_IMPORTED_MODULE_0__["updateMovieById"]);
+});
 
 /***/ }),
 

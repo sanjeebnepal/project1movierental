@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import env from "dotenv";
-
+import routes from "./routes";
 env.config();
 
 let app = express();
@@ -20,9 +20,8 @@ mongoose
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  return res.send("hello world");
-});
+routes(app);
+
 app.listen(process.env.PORT, () =>
   console.log(`Listening to port ${process.env.PORT}`)
 );
